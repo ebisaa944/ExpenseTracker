@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BudgetWise Tracker{% endblock %}</title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Link External CSS from the static directory -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tracker/css/style.css' %}">
+
+    <!-- Placeholder for additional head content -->
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen flex items-start justify-center p-4 sm:p-8">
+
+    <!-- Main content block where individual pages will load their content -->
+    {% block content %}{% endblock %}
+
+    <!-- Placeholder for JavaScript files (usually placed at the end of the body) -->
+    {% block extra_js %}{% endblock %}
+    
+</body>
+</html>
