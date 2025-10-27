@@ -1,14 +1,17 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
 
-# Set the app name for namespacing
-app_name = 'tracker'
+# Set up the router for the Expense API ViewSet, which handles CRUD operations
+router = DefaultRouter()
+router.register(r'expenses', views.ExpenseViewSet)
 
 urlpatterns = [
-    # path for the main dashboard/frontend page
+    # 1. Main Root URL (for the frontend HTML page)
+    # Accessible at: http://127.0.0.1:8000/
     path('', views.index, name='index'), 
     
-    # In a full project, you would add API paths here:
-    # path('api/expenses/', views.ExpenseListCreate.as_view(), name='expense-list'),
-    # path('api/expenses/<int:pk>/', views.ExpenseDetail.as_view(), name='expense-detail'),
+    # 2. API Endpoints (for saving and retrieving data)
+    # Accessible at: http://127.0.0.1:8000/api/expenses/
+    path('api/', include(router.urls)),
 ]
