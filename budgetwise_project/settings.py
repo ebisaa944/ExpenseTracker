@@ -17,6 +17,23 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# ... existing settings ...
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # This should now exist
+    BASE_DIR / 'tracker' / 'static',  # App-specific static files
+]
+
+# Where to collect static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# ... rest of your settings ...
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -57,7 +74,7 @@ ROOT_URLCONF = 'budgetwise_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,3 +143,22 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# REST Framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+}
+
+# Add these authentication settings
+LOGIN_URL = 'tracker:login'  # Points to your custom login URL
+LOGIN_REDIRECT_URL = 'tracker:dashboard'  # Where to redirect after login
+LOGOUT_REDIRECT_URL = 'tracker:index'  # Where to redirect after logout

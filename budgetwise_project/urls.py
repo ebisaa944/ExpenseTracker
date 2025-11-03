@@ -15,10 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from tracker.api_views import (
+    CategoryViewSet, ExpenseViewSet, BudgetViewSet, 
+    FinancialGoalViewSet, AnalyticsViewSet
+)
+
+# Create a router and register our viewsets with explicit basenames
+router = DefaultRouter()
+router.register(r'api/categories', CategoryViewSet, basename='category')
+router.register(r'api/expenses', ExpenseViewSet, basename='expense')
+router.register(r'api/budgets', BudgetViewSet, basename='budget')
+router.register(r'api/goals', FinancialGoalViewSet, basename='financialgoal')
+router.register(r'api/analytics', AnalyticsViewSet, basename='analytics')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Point the root path ('') to the URLs defined in the 'tracker' app
-    path('', include('tracker.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('tracker.urls')),  # This includes your tracker URLs
+    path('', include(router.urls)),  # Include API routes
+]
+
+# Add API auth URLs
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls')),
 ]

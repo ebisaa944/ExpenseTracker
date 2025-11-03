@@ -1,0 +1,97 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Login - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card auth-card">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <h2 class="card-title text-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </h2>
+                            <p class="text-muted">Sign in to your ExpenseTracker account</p>
+                        </div>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Your username and password didn't match. Please try again.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endif %}
+
+                        {% if next %}
+                            {% if user.is_authenticated %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    Your account doesn't have access to this page. 
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Please login to see this page.
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        <form method="post" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="id_username" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Username
+                                </label>
+                                <input type="text" 
+                                       name="username" 
+                                       class="form-control form-control-lg" 
+                                       id="id_username" 
+                                       required
+                                       autofocus
+                                       placeholder="Enter your username">
+                                <div class="invalid-feedback">
+                                    Please enter your username.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_password" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>Password
+                                </label>
+                                <input type="password" 
+                                       name="password" 
+                                       class="form-control form-control-lg" 
+                                       id="id_password" 
+                                       required
+                                       placeholder="Enter your password">
+                                <div class="invalid-feedback">
+                                    Please enter your password.
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" name="next" value="{{ next }}">
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn auth-btn">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <p class="mb-0">
+                                Don't have an account? 
+                                <a href="{% url 'register' %}" class="text-decoration-none fw-bold">Sign up here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

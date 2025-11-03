@@ -1,96 +1,122 @@
-{% extends "base.html" %}
-
+{% extends "tracker/base.html" %}
 {% load static %}
 
+{% block title %}Welcome - ExpenseTracker{% endblock %}
+
 {% block content %}
-    <div class="bg-white p-6 sm:p-10 rounded-xl shadow-2xl w-full max-w-4xl">
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-6 border-b pb-2">BudgetWise Tracker</h1>
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card auth-card">
+                    <div class="card-body p-5 text-center">
+                        <div class="mb-5">
+                            <i class="fas fa-chart-line fa-4x text-primary mb-4"></i>
+                            <h1 class="display-4 fw-bold text-primary mb-3">ExpenseTracker</h1>
+                            <p class="lead text-muted mb-4">
+                                Take control of your finances with our powerful expense tracking system
+                            </p>
+                        </div>
 
-        <!-- Summary Section -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-gray-100 p-4 rounded-lg shadow-inner text-center">
-                <p class="text-sm font-medium text-gray-500">Net Balance</p>
-                <p id="net-balance" class="text-3xl font-bold text-gray-900 mt-1">$0.00</p>
+                        <div class="row mb-5">
+                            <div class="col-md-4 mb-4">
+                                <div class="feature-card">
+                                    <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
+                                    <h5>Track Expenses</h5>
+                                    <p class="text-muted small">Monitor your daily spending habits</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="feature-card">
+                                    <i class="fas fa-chart-pie fa-2x text-warning mb-3"></i>
+                                    <h5>Budget Planning</h5>
+                                    <p class="text-muted small">Set and manage your monthly budgets</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="feature-card">
+                                    <i class="fas fa-bullseye fa-2x text-info mb-3"></i>
+                                    <h5>Financial Goals</h5>
+                                    <p class="text-muted small">Achieve your savings targets</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-3 d-md-flex justify-content-center">
+                            {% if user.is_authenticated %}
+                                <!-- Show dashboard content for logged-in users -->
+                                <div class="container mt-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h1>Welcome back, {{ user.username }}!</h1>
+                                            <p>Manage your finances efficiently.</p>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="card text-white bg-primary mb-3">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Expenses</h5>
+                                                            <p class="card-text">Manage your expenses</p>
+                                                            <a href="{% url 'tracker:expense_list' %}" class="btn btn-light">View Expenses</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="card text-white bg-success mb-3">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Budgets</h5>
+                                                            <p class="card-text">Set and track budgets</p>
+                                                            <a href="{% url 'tracker:budget_list' %}" class="btn btn-light">View Budgets</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="card text-white bg-info mb-3">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Goals</h5>
+                                                            <p class="card-text">View financial goals</p>
+                                                            <a href="{% url 'tracker:goal_list' %}" class="btn btn-light">View Goals</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- Show login/register for anonymous users -->
+                                <a href="{% url 'tracker:login' %}" class="btn btn-outline-primary btn-lg px-5">
+                                    <i class="fas fa-user-plus me-2"></i>Get Started
+                                </a>
+                                <a href="{% url 'tracker:register' %}" class="btn btn-primary btn-lg px-5">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        {% if not user.is_authenticated %}
+                        <div class="mt-5">
+                            <small class="text-muted">
+                                Already have an account? <a href="{% url 'tracker:login' %}" class="text-decoration-none">Sign in here</a>
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class="bg-green-50 p-4 rounded-lg shadow-inner text-center">
-                <p class="text-sm font-medium text-green-700">Total Income</p>
-                <p id="total-income" class="text-3xl font-bold text-green-600 mt-1">$0.00</p>
-            </div>
-            <div class="bg-red-50 p-4 rounded-lg shadow-inner text-center">
-                <p class="text-sm font-medium text-red-700">Total Expenses</p>
-                <p id="total-expense" class="text-3xl font-bold text-red-600 mt-1">$0.00</p>
-            </div>
-        </div>
-
-        <!-- Notification Message Box -->
-        <div id="message-box" class="hidden p-3 mb-4 rounded-lg font-medium"></div>
-
-        <!-- Add Transaction Form -->
-        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Add New Transaction</h2>
-        <form id="expense-form" class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                
-                <!-- Type Selector -->
-                <div class="lg:col-span-1">
-                    <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                    <select id="type" name="type" required
-                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                        <option value="INCOME">Income</option>
-                        <option value="EXPENSE" selected>Expense</option>
-                    </select>
-                </div>
-                
-                <!-- Description / Title Field (The fix for the API error) -->
-                <div class="lg:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <input type="text" id="description" name="title" required
-                        class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-                        placeholder="e.g., Groceries, Salary">
-                </div>
-
-                <!-- Amount -->
-                <div class="lg:col-span-1">
-                    <label for="amount" class="block text-sm font-medium text-gray-700">Amount ($)</label>
-                    <input type="number" id="amount" name="amount" required step="0.01" min="0.01"
-                        class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-                        placeholder="0.00">
-                </div>
-                
-                <!-- Date -->
-                <div class="lg:col-span-1">
-                    <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="date" name="date" required
-                        class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2">
-                </div>
-                
-                <!-- Category -->
-                <div class="lg:col-span-2">
-                    <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                    <select id="category" name="category" required
-                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                        <!-- Options will be populated by JS -->
-                    </select>
-                </div>
-            </div>
-
-            <button type="submit"
-                class="mt-6 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                Add Transaction
-            </button>
-        </form>
-
-        <!-- Transaction List -->
-        <h2 class="text-2xl font-semibold text-gray-700 mb-4">History</h2>
-        <div id="transaction-list" class="space-y-3">
-            <p class="text-gray-500 text-center py-4">No transactions recorded yet.</p>
         </div>
     </div>
-{% endblock %}
+</div>
 
-{% block extra_js %}
-    <!-- Link the separate JavaScript file and initialize -->
-    <script src="{% static 'tracker/js/main.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', BudgetWise.init);
-    </script>
+<style>
+.feature-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #f8f9fa;
+    transition: transform 0.3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+</style>
 {% endblock %}
