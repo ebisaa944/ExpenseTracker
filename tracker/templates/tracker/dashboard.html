@@ -7,35 +7,59 @@
 <div class="container mt-4">
     <!-- Financial Summary Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-primary h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Monthly Income</h6>
-                    <h3 class="card-text">${{ monthly_income|floatformat:2 }}</h3>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title">Monthly Income</h6>
+                            <h3 class="card-text">${{ monthly_income|floatformat:2 }}</h3>
+                        </div>
+                        <i class="fas fa-money-bill-wave fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-danger h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Monthly Expenses</h6>
-                    <h3 class="card-text">${{ monthly_expenses|floatformat:2 }}</h3>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title">Monthly Expenses</h6>
+                            <h3 class="card-text">${{ monthly_expenses|floatformat:2 }}</h3>
+                        </div>
+                        <i class="fas fa-receipt fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-success">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-success h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Net Savings</h6>
-                    <h3 class="card-text">${{ monthly_income|subtract:monthly_expenses|floatformat:2 }}</h3>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title">Net Savings</h6>
+                            <h3 class="card-text">
+                                {% with net_savings=monthly_income|default:0|add:0 %}
+                                    ${{ net_savings|floatformat:2 }}
+                                {% endwith %}
+                            </h3>
+                        </div>
+                        <i class="fas fa-piggy-bank fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-info">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-info h-100">
                 <div class="card-body">
-                    <h6 class="card-title">Active Goals</h6>
-                    <h3 class="card-text">{{ goals.count }}</h3>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title">Active Goals</h6>
+                            <h3 class="card-text">{{ goals.count }}</h3>
+                        </div>
+                        <i class="fas fa-bullseye fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,11 +67,13 @@
 
     <div class="row">
         <!-- Left Column: Charts -->
-        <div class="col-md-8">
+        <div class="col-lg-8">
             <!-- Expense Trend Chart -->
             <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Monthly Expense Trend</h5>
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2 text-primary"></i>Monthly Expense Trend
+                    </h5>
                 </div>
                 <div class="card-body">
                     <canvas id="expenseTrendChart" height="250"></canvas>
@@ -56,8 +82,10 @@
 
             <!-- Category Spending Chart -->
             <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Spending by Category</h5>
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-pie me-2 text-primary"></i>Spending by Category
+                    </h5>
                 </div>
                 <div class="card-body">
                     <canvas id="categoryChart" height="250"></canvas>
@@ -66,65 +94,125 @@
         </div>
 
         <!-- Right Column: Recent Activity & Alerts -->
-        <div class="col-md-4">
+        <div class="col-lg-4">
             <!-- Recent Expenses -->
             <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Expenses</h5>
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock me-2 text-primary"></i>Recent Expenses
+                    </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     {% if recent_expenses %}
                         <div class="list-group list-group-flush">
                             {% for expense in recent_expenses %}
-                            <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <div>
-                                    <h6 class="mb-1">{{ expense.description }}</h6>
-                                    <small class="text-muted">{{ expense.category.name }} • {{ expense.date|date:"M d" }}</small>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 text-truncate">{{ expense.description }}</h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-tag me-1"></i>{{ expense.category.get_name_display }}
+                                        • {{ expense.date|date:"M d" }}
+                                    </small>
                                 </div>
-                                <span class="badge bg-danger rounded-pill">${{ expense.amount }}</span>
+                                <span class="badge bg-danger rounded-pill ms-2">${{ expense.amount|floatformat:2 }}</span>
                             </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-muted">No recent expenses</p>
+                        <div class="text-center py-4">
+                            <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No recent expenses</p>
+                        </div>
                     {% endif %}
-                    <div class="mt-3">
-                        <a href="{% url 'tracker:expense_list' %}" class="btn btn-outline-primary btn-sm">View All Expenses</a>
+                    <div class="card-footer bg-white">
+                        <a href="{% url 'tracker:expense_list' %}" class="btn btn-outline-primary btn-sm w-100">
+                            View All Expenses
+                        </a>
                     </div>
                 </div>
             </div>
 
             <!-- Budget Alerts -->
             {% if budget_alerts %}
-            <div class="card border-warning">
+            <div class="card border-warning mb-4">
                 <div class="card-header bg-warning text-dark">
-                    <h5 class="card-title mb-0">Budget Alerts</h5>
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Budget Alerts
+                    </h5>
                 </div>
                 <div class="card-body">
                     {% for alert in budget_alerts %}
-                    <div class="alert alert-warning alert-dismissible fade show mb-2" role="alert">
-                        <small>
-                            <strong>{{ alert.budget.category.name }}</strong><br>
-                            Spent ${{ alert.spent|floatformat:2 }} of ${{ alert.budget.amount|floatformat:2 }}
-                            <div class="progress mt-1" style="height: 5px;">
-                                <div class="progress-bar bg-warning" role="progressbar" 
-                                     style="width: {{ alert.percentage }}%;" 
-                                     aria-valuenow="{{ alert.percentage }}" 
-                                     aria-valuemin="0" 
-                                     aria-valuemax="100">
+                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-exclamation-circle me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <strong class="d-block">{{ alert.budget.category.get_name_display }}</strong>
+                                <small class="d-block text-dark">
+                                    Spent ${{ alert.spent|floatformat:2 }} of ${{ alert.budget.amount|floatformat:2 }}
+                                    ({{ alert.percentage|floatformat:1 }}%)
+                                </small>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar bg-warning" role="progressbar" 
+                                         style="width: {{ alert.percentage }}%;" 
+                                         aria-valuenow="{{ alert.percentage }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
                                 </div>
                             </div>
-                        </small>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
 
+            <!-- Financial Goals -->
+            {% if goals %}
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bullseye me-2 text-primary"></i>Financial Goals
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for goal in goals|slice:":3" %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="text-truncate">{{ goal.name }}</strong>
+                            <small class="text-muted">{{ goal.progress_percentage|floatformat:1 }}%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ goal.progress_percentage }}%;"
+                                 aria-valuenow="{{ goal.progress_percentage }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-1">
+                            ${{ goal.current_amount|floatformat:2 }} of ${{ goal.target_amount|floatformat:2 }}
+                        </small>
+                    </div>
+                    {% if not forloop.last %}<hr class="my-2">{% endif %}
+                    {% endfor %}
+                    {% if goals.count > 3 %}
+                    <div class="text-center mt-2">
+                        <a href="{% url 'tracker:goal_list' %}" class="btn btn-outline-primary btn-sm">
+                            View All Goals
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Quick Actions -->
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Quick Actions</h5>
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2 text-primary"></i>Quick Actions
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
@@ -152,69 +240,158 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Expense Trend Chart
     fetch("{% url 'tracker:expense_chart_data' %}")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            const ctx = document.getElementById('expenseTrendChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map(item => item.month),
-                    datasets: [{
-                        label: 'Monthly Expenses',
-                        data: data.map(item => item.amount),
-                        borderColor: '#007bff',
-                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+            const ctx = document.getElementById('expenseTrendChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map(item => item.month),
+                        datasets: [{
+                            label: 'Monthly Expenses',
+                            data: data.map(item => item.amount),
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value;
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return '$' + context.parsed.y.toFixed(2);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading expense chart data:', error);
         });
 
     // Category Chart
     fetch("{% url 'tracker:category_chart_data' %}")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
-            const ctx = document.getElementById('categoryChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        data: data.data,
-                        backgroundColor: data.colors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
+            const ctx = document.getElementById('categoryChart');
+            if (ctx && data.labels && data.labels.length > 0) {
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: data.colors,
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                                    }
+                                }
+                            }
                         }
                     }
+                });
+            } else {
+                // Show message if no category data
+                const ctx = document.getElementById('categoryChart');
+                if (ctx) {
+                    ctx.getContext('2d').fillText('No category data available', 10, 50);
                 }
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading category chart data:', error);
         });
 });
 </script>
+
+<style>
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1rem 1.25rem;
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1rem 1.25rem;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.progress {
+    border-radius: 10px;
+}
+
+.badge {
+    font-size: 0.75em;
+    min-width: 60px;
+}
+</style>
 {% endblock %}

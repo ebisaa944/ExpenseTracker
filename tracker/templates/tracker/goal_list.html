@@ -1,0 +1,88 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Financial Goals - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-bullseye me-2"></i>Financial Goals</h1>
+        <a href="{% url 'tracker:goal_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Set Goal
+        </a>
+    </div>
+
+    {% if goals %}
+        <div class="row">
+            {% for goal in goals %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title">{{ goal.name }}</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                        data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'tracker:goal_edit' goal.pk %}">
+                                            <i class="fas fa-edit me-2"></i>Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{% url 'tracker:goal_delete' goal.pk %}">
+                                            <i class="fas fa-trash me-2"></i>Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        {% if goal.description %}
+                            <p class="text-muted mb-3">{{ goal.description }}</p>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted">Progress: ${{ goal.current_amount|floatformat:2 }} of ${{ goal.target_amount|floatformat:2 }}</span>
+                                <span class="fw-bold text-primary">{{ goal.progress_percentage|floatformat:1 }}%</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: {{ goal.progress_percentage }}%;"
+                                     aria-valuenow="{{ goal.progress_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Deadline</small>
+                                <strong>{{ goal.deadline|date:"M d, Y" }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Days Left</small>
+                                <strong class="{% if goal.days_remaining < 7 %}text-danger{% elif goal.days_remaining < 30 %}text-warning{% else %}text-success{% endif %}">
+                                    {{ goal.days_remaining }}
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-bullseye fa-4x text-muted mb-3"></i>
+            <h3>No Financial Goals</h3>
+            <p class="text-muted">Set financial goals to track your savings targets.</p>
+            <a href="{% url 'tracker:goal_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Set Your First Goal
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

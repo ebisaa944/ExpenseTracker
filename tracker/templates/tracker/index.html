@@ -4,119 +4,115 @@
 {% block title %}Welcome - ExpenseTracker{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="card auth-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="mb-5">
-                            <i class="fas fa-chart-line fa-4x text-primary mb-4"></i>
-                            <h1 class="display-4 fw-bold text-primary mb-3">ExpenseTracker</h1>
-                            <p class="lead text-muted mb-4">
-                                Take control of your finances with our powerful expense tracking system
-                            </p>
-                        </div>
+    {% if user.is_authenticated %}
+        <!-- Redirect to dashboard for logged-in users -->
+        <script>
+            window.location.href = "{% url 'tracker:dashboard' %}";
+        </script>
+        <div class="container text-center mt-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Redirecting to dashboard...</p>
+        </div>
+    {% else %}
+        <!-- Landing page for anonymous users -->
+        <div class="auth-container">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card auth-card">
+                            <div class="card-body p-5 text-center">
+                                <div class="mb-5">
+                                    <i class="fas fa-chart-line fa-4x text-primary mb-4"></i>
+                                    <h1 class="display-4 fw-bold text-primary mb-3">ExpenseTracker</h1>
+                                    <p class="lead text-muted mb-4">
+                                        Take control of your finances with our powerful expense tracking system
+                                    </p>
+                                </div>
 
-                        <div class="row mb-5">
-                            <div class="col-md-4 mb-4">
-                                <div class="feature-card">
-                                    <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
-                                    <h5>Track Expenses</h5>
-                                    <p class="text-muted small">Monitor your daily spending habits</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <div class="feature-card">
-                                    <i class="fas fa-chart-pie fa-2x text-warning mb-3"></i>
-                                    <h5>Budget Planning</h5>
-                                    <p class="text-muted small">Set and manage your monthly budgets</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <div class="feature-card">
-                                    <i class="fas fa-bullseye fa-2x text-info mb-3"></i>
-                                    <h5>Financial Goals</h5>
-                                    <p class="text-muted small">Achieve your savings targets</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-3 d-md-flex justify-content-center">
-                            {% if user.is_authenticated %}
-                                <!-- Show dashboard content for logged-in users -->
-                                <div class="container mt-4">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <h1>Welcome back, {{ user.username }}!</h1>
-                                            <p>Manage your finances efficiently.</p>
-                                            
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="card text-white bg-primary mb-3">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Expenses</h5>
-                                                            <p class="card-text">Manage your expenses</p>
-                                                            <a href="{% url 'tracker:expense_list' %}" class="btn btn-light">View Expenses</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="card text-white bg-success mb-3">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Budgets</h5>
-                                                            <p class="card-text">Set and track budgets</p>
-                                                            <a href="{% url 'tracker:budget_list' %}" class="btn btn-light">View Budgets</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="card text-white bg-info mb-3">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Goals</h5>
-                                                            <p class="card-text">View financial goals</p>
-                                                            <a href="{% url 'tracker:goal_list' %}" class="btn btn-light">View Goals</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <div class="row mb-5">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
+                                            <h5>Track Expenses</h5>
+                                            <p class="text-muted small">Monitor your daily spending habits</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-chart-pie fa-2x text-warning mb-3"></i>
+                                            <h5>Budget Planning</h5>
+                                            <p class="text-muted small">Set and manage your monthly budgets</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-bullseye fa-2x text-info mb-3"></i>
+                                            <h5>Financial Goals</h5>
+                                            <p class="text-muted small">Achieve your savings targets</p>
                                         </div>
                                     </div>
                                 </div>
-                            {% else %}
-                                <!-- Show login/register for anonymous users -->
-                                <a href="{% url 'tracker:login' %}" class="btn btn-outline-primary btn-lg px-5">
-                                    <i class="fas fa-user-plus me-2"></i>Get Started
-                                </a>
-                                <a href="{% url 'tracker:register' %}" class="btn btn-primary btn-lg px-5">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                                </a>
-                            {% endif %}
-                        </div>
 
-                        {% if not user.is_authenticated %}
-                        <div class="mt-5">
-                            <small class="text-muted">
-                                Already have an account? <a href="{% url 'tracker:login' %}" class="text-decoration-none">Sign in here</a>
-                            </small>
+                                <div class="d-grid gap-3 d-md-flex justify-content-center">
+                                    <a href="{% url 'tracker:register' %}" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-user-plus me-2"></i>Get Started
+                                    </a>
+                                    <a href="{% url 'tracker:login' %}" class="btn btn-outline-primary btn-lg px-5">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    </a>
+                                </div>
+
+                                <div class="mt-5">
+                                    <small class="text-muted">
+                                        Already have an account? <a href="{% url 'tracker:login' %}" class="text-decoration-none">Sign in here</a>
+                                    </small>
+                                </div>
+                            </div>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<style>
-.feature-card {
-    padding: 1.5rem;
-    border-radius: 12px;
-    background: #f8f9fa;
-    transition: transform 0.3s ease;
-}
-.feature-card:hover {
-    transform: translateY(-5px);
-}
-</style>
+        <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .auth-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: #f8f9fa;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        </style>
+    {% endif %}
 {% endblock %}

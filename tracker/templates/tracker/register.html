@@ -23,7 +23,7 @@
                                 Please correct the errors below.
                                 {% for field, errors in form.errors.items %}
                                     {% for error in errors %}
-                                        <div class="small">{{ error }}</div>
+                                        <div class="small mt-1">{{ error }}</div>
                                     {% endfor %}
                                 {% endfor %}
                             </div>
@@ -32,8 +32,52 @@
                         <form method="post" class="needs-validation" novalidate>
                             {% csrf_token %}
                             
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_first_name" class="form-label">First Name</label>
+                                    <input type="text" 
+                                           name="first_name" 
+                                           class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" 
+                                           id="id_first_name" 
+                                           required
+                                           value="{{ form.first_name.value|default:'' }}"
+                                           placeholder="Your first name">
+                                    {% if form.first_name.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.first_name.errors.0 }}
+                                        </div>
+                                    {% else %}
+                                        <div class="invalid-feedback">
+                                            Please enter your first name.
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_last_name" class="form-label">Last Name</label>
+                                    <input type="text" 
+                                           name="last_name" 
+                                           class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" 
+                                           id="id_last_name" 
+                                           required
+                                           value="{{ form.last_name.value|default:'' }}"
+                                           placeholder="Your last name">
+                                    {% if form.last_name.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.last_name.errors.0 }}
+                                        </div>
+                                    {% else %}
+                                        <div class="invalid-feedback">
+                                            Please enter your last name.
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
                             <div class="mb-3">
-                                <label for="id_username" class="form-label">Username</label>
+                                <label for="id_username" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Username
+                                </label>
                                 <input type="text" 
                                        name="username" 
                                        class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
@@ -53,7 +97,9 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="id_email" class="form-label">Email</label>
+                                <label for="id_email" class="form-label">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
                                 <input type="email" 
                                        name="email" 
                                        class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
@@ -73,7 +119,9 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label for="id_password1" class="form-label">Password</label>
+                                <label for="id_password1" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>Password
+                                </label>
                                 <input type="password" 
                                        name="password1" 
                                        class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
@@ -86,6 +134,7 @@
                                     </div>
                                 {% else %}
                                     <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
                                         Your password must contain at least 8 characters.
                                     </small>
                                     <div class="invalid-feedback">
@@ -95,7 +144,9 @@
                             </div>
                             
                             <div class="mb-4">
-                                <label for="id_password2" class="form-label">Confirm Password</label>
+                                <label for="id_password2" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>Confirm Password
+                                </label>
                                 <input type="password" 
                                        name="password2" 
                                        class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
@@ -114,7 +165,7 @@
                             </div>
                             
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn auth-btn">
+                                <button type="submit" class="btn btn-primary btn-lg">
                                     <i class="fas fa-user-plus me-2"></i>Create Account
                                 </button>
                             </div>
@@ -123,7 +174,7 @@
                         <div class="text-center mt-4">
                             <p class="mb-0">
                                 Already have an account? 
-                                <a href="{% url 'login' %}" class="text-decoration-none fw-bold">Sign in here</a>
+                                <a href="{% url 'tracker:login' %}" class="text-decoration-none fw-bold">Sign in here</a>
                             </p>
                         </div>
                     </div>
@@ -132,4 +183,117 @@
         </div>
     </div>
 </div>
+
+<style>
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 0;
+}
+
+.auth-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.95);
+}
+
+.auth-card .card-title {
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e1e5e9;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    transform: translateY(-1px);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.invalid-feedback {
+    display: none;
+    font-size: 0.875em;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.form-control.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.form-text {
+    font-size: 0.875em;
+}
+</style>
+
+<script>
+// Bootstrap validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Real-time password confirmation validation
+document.addEventListener('DOMContentLoaded', function() {
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    
+    function validatePasswordMatch() {
+        if (password1.value !== password2.value) {
+            password2.setCustomValidity('Passwords do not match');
+        } else {
+            password2.setCustomValidity('');
+        }
+    }
+    
+    password1.addEventListener('input', validatePasswordMatch);
+    password2.addEventListener('input', validatePasswordMatch);
+});
+</script>
 {% endblock %}

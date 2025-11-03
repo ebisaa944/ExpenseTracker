@@ -1,0 +1,125 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}API Documentation - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-code me-2"></i>API Documentation</h1>
+            <p class="lead">REST API endpoints for ExpenseTracker</p>
+            
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                All API endpoints require authentication. Use your regular login credentials.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Categories API</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <code>GET /api/categories/</code><br>
+                                    <small class="text-muted">List all categories</small>
+                                </li>
+                                <li class="mb-2">
+                                    <code>POST /api/categories/</code><br>
+                                    <small class="text-muted">Create a new category</small>
+                                </li>
+                                <li class="mb-2">
+                                    <code>GET /api/categories/{id}/</code><br>
+                                    <small class="text-muted">Get specific category</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Expenses API</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <code>GET /api/expenses/</code><br>
+                                    <small class="text-muted">List all expenses</small>
+                                </li>
+                                <li class="mb-2">
+                                    <code>POST /api/expenses/</code><br>
+                                    <small class="text-muted">Create new expense</small>
+                                </li>
+                                <li class="mb-2">
+                                    <code>GET /api/expenses/summary/</code><br>
+                                    <small class="text-muted">Get expense summary</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fas fa-wallet me-2"></i>Budgets API</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <code>GET /api/budgets/</code><br>
+                                    <small class="text-muted">List all budgets</small>
+                                </li>
+                                <li class="mb-2">
+                                    <code>GET /api/budgets/progress/</code><br>
+                                    <small class="text-muted">Get budget progress</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-bullseye me-2"></i>Goals API</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <code>GET /api/goals/</code><br>
+                                    <small class="text-muted">List all financial goals</small>
+                                </li>
+                                <li class="mb-2">
+                                    <code>POST /api/goals/{id}/update_progress/</code><br>
+                                    <small class="text-muted">Update goal progress</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Testing the API</h5>
+                </div>
+                <div class="card-body">
+                    <p>You can test the API using tools like:</p>
+                    <ul>
+                        <li><strong>Postman</strong> - Desktop API testing tool</li>
+                        <li><strong>Thunder Client</strong> - VS Code extension</li>
+                        <li><strong>curl</strong> - Command line tool</li>
+                    </ul>
+                    <p class="mb-0">
+                        <a href="https://www.postman.com/" target="_blank" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-external-link-alt me-2"></i>Get Postman
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

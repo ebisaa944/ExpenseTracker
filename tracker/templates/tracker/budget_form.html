@@ -1,0 +1,80 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-{% if budget %}edit{% else %}plus{% endif %} me-2"></i>{{ title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category *</label>
+                                <select name="category" class="form-select" required>
+                                    <option value="">Select a category</option>
+                                    {% for category in form.fields.category.queryset %}
+                                        <option value="{{ category.id }}" 
+                                                {% if form.category.value == category.id %}selected{% endif %}>
+                                            {{ category.get_name_display }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Amount *</label>
+                                <input type="number" name="amount" class="form-control" 
+                                       step="0.01" min="0.01" required 
+                                       value="{{ form.amount.value|default:'' }}" placeholder="0.00">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Period *</label>
+                                <select name="period" class="form-select" required>
+                                    {% for value, label in form.fields.period.choices %}
+                                        <option value="{{ value }}" 
+                                                {% if form.period.value == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Start Date *</label>
+                                <input type="date" name="start_date" class="form-control" 
+                                       required value="{{ form.start_date.value|default:'' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">End Date (Optional)</label>
+                            <input type="date" name="end_date" class="form-control" 
+                                   value="{{ form.end_date.value|default:'' }}">
+                            <div class="form-text">Leave empty for ongoing budgets</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'tracker:budget_list' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                {% if budget %}Update{% else %}Create{% endif %} Budget
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

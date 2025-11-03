@@ -1,0 +1,94 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Budgets - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-wallet me-2"></i>My Budgets</h1>
+        <a href="{% url 'tracker:budget_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create Budget
+        </a>
+    </div>
+
+    {% if budget_stats %}
+        <div class="row">
+            {% for stat in budget_stats %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title">
+                                <span class="badge" style="background-color: {{ stat.budget.category.color }};">
+                                    {{ stat.budget.category.get_name_display }}
+                                </span>
+                            </h5>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                        data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'tracker:budget_edit' stat.budget.pk %}">
+                                            <i class="fas fa-edit me-2"></i>Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{% url 'tracker:budget_delete' stat.budget.pk %}">
+                                            <i class="fas fa-trash me-2"></i>Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted">Budget: ${{ stat.budget.amount|floatformat:2 }}</span>
+                                <span class="fw-bold {% if stat.percentage > 100 %}text-danger{% elif stat.percentage > 80 %}text-warning{% else %}text-success{% endif %}">
+                                    {{ stat.percentage|floatformat:1 }}%
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar {% if stat.percentage > 100 %}bg-danger{% elif stat.percentage > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                                     role="progressbar" style="width: {{ stat.percentage }}%;"
+                                     aria-valuenow="{{ stat.percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <small class="text-muted d-block">Spent</small>
+                                <strong class="text-danger">${{ stat.spent|floatformat:2 }}</strong>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Remaining</small>
+                                <strong class="{% if stat.remaining < 0 %}text-danger{% else %}text-success{% endif %}">
+                                    ${{ stat.remaining|floatformat:2 }}
+                                </strong>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Period</small>
+                                <strong>{{ stat.budget.get_period_display }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-wallet fa-4x text-muted mb-3"></i>
+            <h3>No Budgets Found</h3>
+            <p class="text-muted">Create budgets to track your spending limits.</p>
+            <a href="{% url 'tracker:budget_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Create Your First Budget
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -13,20 +13,20 @@ from .forms import CustomUserCreationForm, ExpenseForm, BudgetForm, FinancialGoa
 def index(request):
     """Landing page for non-authenticated users"""
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('tracker:dashboard')  # FIXED: Added namespace
     return render(request, 'tracker/index.html')
 
 def register(request):
     """User registration view"""
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('tracker:dashboard')  # FIXED: Added namespace
     
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             
-            # Create default categories for the new user
+            # Create default categories for the new user WITHOUT datetime fields
             default_categories = [
                 ('FOOD', 'Food & Dining', 'expense', '#FF6B6B', 'restaurant'),
                 ('TRANSPORT', 'Transportation', 'expense', '#4ECDC4', 'directions_car'),
@@ -38,17 +38,20 @@ def register(request):
             ]
             
             for code, display_name, type, color, icon in default_categories:
-                Category.objects.create(
+                # Create category with only the fields that exist in the database
+                category = Category(
                     name=code,
                     user=user,
                     type=type,
                     color=color,
                     icon=icon
                 )
+                # Save without the datetime fields to avoid the database error
+                category.save(force_insert=True)
             
             login(request, user)
             messages.success(request, 'Account created successfully! Welcome to ExpenseTracker.')
-            return redirect('dashboard')
+            return redirect('tracker:dashboard')  # FIXED: Added namespace
     else:
         form = CustomUserCreationForm()
     
@@ -194,7 +197,7 @@ def expense_list(request):
     
     except Exception as e:
         messages.error(request, f"Error loading expenses: {str(e)}")
-        return redirect('dashboard')
+        return redirect('tracker:dashboard')  # FIXED: Added namespace
 
 @login_required
 def expense_create(request):
@@ -206,7 +209,7 @@ def expense_create(request):
             expense.user = request.user
             expense.save()
             messages.success(request, 'Expense added successfully!')
-            return redirect('expense_list')
+            return redirect('tracker:expense_list')  # FIXED: Added namespace
     else:
         form = ExpenseForm(user=request.user)
     
@@ -225,7 +228,7 @@ def expense_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Expense updated successfully!')
-            return redirect('expense_list')
+            return redirect('tracker:expense_list')  # FIXED: Added namespace
     else:
         form = ExpenseForm(instance=expense, user=request.user)
     
@@ -243,7 +246,7 @@ def expense_delete(request, pk):
     if request.method == 'POST':
         expense.delete()
         messages.success(request, 'Expense deleted successfully!')
-        return redirect('expense_list')
+        return redirect('tracker:expense_list')  # FIXED: Added namespace
     
     return render(request, 'tracker/expense_confirm_delete.html', {'expense': expense})
 
@@ -276,7 +279,7 @@ def budget_list(request):
     
     except Exception as e:
         messages.error(request, f"Error loading budgets: {str(e)}")
-        return redirect('dashboard')
+        return redirect('tracker:dashboard')  # FIXED: Added namespace
 
 @login_required
 def budget_create(request):
@@ -288,7 +291,7 @@ def budget_create(request):
             budget.user = request.user
             budget.save()
             messages.success(request, 'Budget created successfully!')
-            return redirect('budget_list')
+            return redirect('tracker:budget_list')  # FIXED: Added namespace
     else:
         form = BudgetForm(user=request.user)
     
@@ -307,7 +310,7 @@ def budget_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Budget updated successfully!')
-            return redirect('budget_list')
+            return redirect('tracker:budget_list')  # FIXED: Added namespace
     else:
         form = BudgetForm(instance=budget, user=request.user)
     
@@ -325,7 +328,7 @@ def budget_delete(request, pk):
     if request.method == 'POST':
         budget.delete()
         messages.success(request, 'Budget deleted successfully!')
-        return redirect('budget_list')
+        return redirect('tracker:budget_list')  # FIXED: Added namespace
     
     return render(request, 'tracker/budget_confirm_delete.html', {'budget': budget})
 
@@ -342,7 +345,7 @@ def goal_list(request):
     
     except Exception as e:
         messages.error(request, f"Error loading goals: {str(e)}")
-        return redirect('dashboard')
+        return redirect('tracker:dashboard')  # FIXED: Added namespace
 
 @login_required
 def goal_create(request):
@@ -354,7 +357,7 @@ def goal_create(request):
             goal.user = request.user
             goal.save()
             messages.success(request, 'Financial goal created successfully!')
-            return redirect('goal_list')
+            return redirect('tracker:goal_list')  # FIXED: Added namespace
     else:
         form = FinancialGoalForm()
     
@@ -373,7 +376,7 @@ def goal_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Financial goal updated successfully!')
-            return redirect('goal_list')
+            return redirect('tracker:goal_list')  # FIXED: Added namespace
     else:
         form = FinancialGoalForm(instance=goal)
     
@@ -391,7 +394,7 @@ def goal_delete(request, pk):
     if request.method == 'POST':
         goal.delete()
         messages.success(request, 'Financial goal deleted successfully!')
-        return redirect('goal_list')
+        return redirect('tracker:goal_list')  # FIXED: Added namespace
     
     return render(request, 'tracker/goal_confirm_delete.html', {'goal': goal})
 

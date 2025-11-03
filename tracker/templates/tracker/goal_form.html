@@ -1,0 +1,67 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-{% if goal %}edit{% else %}plus{% endif %} me-2"></i>{{ title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Goal Name *</label>
+                            <input type="text" name="name" class="form-control" 
+                                   required value="{{ form.name.value|default:'' }}"
+                                   placeholder="e.g., New Car, Vacation, Emergency Fund">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Target Amount *</label>
+                                <input type="number" name="target_amount" class="form-control" 
+                                       step="0.01" min="0.01" required 
+                                       value="{{ form.target_amount.value|default:'' }}" placeholder="0.00">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Current Amount</label>
+                                <input type="number" name="current_amount" class="form-control" 
+                                       step="0.01" min="0" 
+                                       value="{{ form.current_amount.value|default:'0' }}" placeholder="0.00">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Deadline *</label>
+                            <input type="date" name="deadline" class="form-control" 
+                                   required value="{{ form.deadline.value|default:'' }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Description (Optional)</label>
+                            <textarea name="description" class="form-control" rows="3" 
+                                      placeholder="Describe your goal...">{{ form.description.value|default:'' }}</textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'tracker:goal_list' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                {% if goal %}Update{% else %}Create{% endif %} Goal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

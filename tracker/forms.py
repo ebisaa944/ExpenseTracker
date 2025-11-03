@@ -21,6 +21,31 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+def create_default_categories(user):
+    """Create default categories for a user if they don't have any"""
+    if not Category.objects.filter(user=user).exists():
+        default_categories = [
+            ('Food & Dining', 'expense', '#FF6B6B'),
+            ('Transportation', 'expense', '#4ECDC4'),
+            ('Utilities', 'expense', '#45B7D1'),
+            ('Housing/Rent', 'expense', '#96CEB4'),
+            ('Entertainment', 'expense', '#FFEAA7'),
+            ('Shopping', 'expense', '#DDA0DD'),
+            ('Healthcare', 'expense', '#98D8C8'),
+            ('Education', 'expense', '#F7DC6F'),
+            ('Travel', 'expense', '#BB8FCE'),
+            ('Salary/Income', 'income', '#82E0AA'),
+            ('Other', 'expense', '#85929E')
+        ]
+        
+        for name, cat_type, color in default_categories:
+            Category.objects.create(
+                user=user,
+                name=name,
+                type=cat_type,
+                color=color
+            )
+
 class ExpenseForm(forms.ModelForm):
     class Meta:
         model = Expense
@@ -36,6 +61,7 @@ class ExpenseForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
+            create_default_categories(user)
             self.fields['category'].queryset = Category.objects.filter(user=user, type='expense')
 
 class BudgetForm(forms.ModelForm):
@@ -52,6 +78,7 @@ class BudgetForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
+            create_default_categories(user)
             self.fields['category'].queryset = Category.objects.filter(user=user, type='expense')
 
 class FinancialGoalForm(forms.ModelForm):
@@ -96,4 +123,5 @@ class ExpenseFilterForm(forms.Form):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if user:
+            create_default_categories(user)
             self.fields['category'].queryset = Category.objects.filter(user=user)

@@ -76,7 +76,7 @@
                             <input type="hidden" name="next" value="{{ next }}">
                             
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn auth-btn">
+                                <button type="submit" class="btn btn-primary btn-lg">
                                     <i class="fas fa-sign-in-alt me-2"></i>Sign In
                                 </button>
                             </div>
@@ -85,7 +85,7 @@
                         <div class="text-center mt-4">
                             <p class="mb-0">
                                 Don't have an account? 
-                                <a href="{% url 'register' %}" class="text-decoration-none fw-bold">Sign up here</a>
+                                <a href="{% url 'tracker:register' %}" class="text-decoration-none fw-bold">Sign up here</a>
                             </p>
                         </div>
                     </div>
@@ -94,4 +94,84 @@
         </div>
     </div>
 </div>
+
+<style>
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 0;
+}
+
+.auth-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.95);
+}
+
+.auth-card .card-title {
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e1e5e9;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.invalid-feedback {
+    display: none;
+    font-size: 0.875em;
+}
+
+.was-validated .form-control:invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+</style>
+
+<script>
+// Bootstrap validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
 {% endblock %}

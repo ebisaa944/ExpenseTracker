@@ -17,10 +17,10 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <a href="{% url 'login' %}" class="btn auth-btn">
+                            <a href="{% url 'tracker:login' %}" class="btn btn-primary btn-lg">
                                 <i class="fas fa-sign-in-alt me-2"></i>Sign In Again
                             </a>
-                            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                            <a href="{% url 'tracker:index' %}" class="btn btn-outline-secondary btn-lg">
                                 <i class="fas fa-home me-2"></i>Return to Home
                             </a>
                         </div>
@@ -36,4 +36,61 @@
         </div>
     </div>
 </div>
+
+<style>
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 0;
+}
+
+.auth-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.95);
+}
+
+.auth-card .card-title {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-secondary {
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.2);
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.text-primary {
+    color: #667eea !important;
+}
+</style>
 {% endblock %}
