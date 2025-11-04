@@ -1,0 +1,120 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Financial Reports - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">Financial Reports</h1>
+            <p class="text-muted">Generate and download financial reports</p>
+        </div>
+    </div>
+
+    <!-- Quick Export Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-csv fa-3x text-success mb-3"></i>
+                    <h5>Export Expenses</h5>
+                    <p class="text-muted small">Download all your expenses in CSV format</p>
+                    <a href="{% url 'tracker:export_expenses_csv' %}" class="btn btn-success">
+                        <i class="fas fa-download me-2"></i>Export CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-csv fa-3x text-primary mb-3"></i>
+                    <h5>Export Income</h5>
+                    <p class="text-muted small">Download all your income records in CSV format</p>
+                    <a href="{% url 'tracker:export_income_csv' %}" class="btn btn-primary">
+                        <i class="fas fa-download me-2"></i>Export CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                    <h5>Financial Report</h5>
+                    <p class="text-muted small">Generate a comprehensive PDF financial report</p>
+                    <a href="{% url 'tracker:export_financial_report_pdf' %}" class="btn btn-danger">
+                        <i class="fas fa-download me-2"></i>Generate PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card primary">
+                <i class="fas fa-money-bill-wave stats-icon"></i>
+                <div class="stats-number">${{ monthly_income|default:0|floatformat:2 }}</div>
+                <div class="stats-label">Monthly Income</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card warning">
+                <i class="fas fa-receipt stats-icon"></i>
+                <div class="stats-number">${{ monthly_expenses|default:0|floatformat:2 }}</div>
+                <div class="stats-label">Monthly Expenses</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card success">
+                <i class="fas fa-piggy-bank stats-icon"></i>
+                <div class="stats-number">${{ monthly_savings|default:0|floatformat:2 }}</div>
+                <div class="stats-label">Monthly Savings</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card info">
+                <i class="fas fa-percentage stats-icon"></i>
+                <div class="stats-number">{{ savings_rate|default:0|floatformat:1 }}%</div>
+                <div class="stats-label">Savings Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Generation -->
+    <div class="card dashboard-card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Custom Report Generator</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <h6>Generate Custom Report</h6>
+                    <p class="text-muted">Create a customized financial report with specific date ranges and data.</p>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Custom report configuration coming soon. Use the quick export options above for now.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6>Tips</h6>
+                            <ul class="small text-muted">
+                                <li>Export CSV files for data analysis in Excel</li>
+                                <li>Use PDF reports for sharing and printing</li>
+                                <li>Regular exports help with backup</li>
+                                <li>Compare monthly reports to track progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

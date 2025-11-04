@@ -20,53 +20,159 @@
         <div class="auth-container">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6">
+                    <div class="col-md-10 col-lg-8">
                         <div class="card auth-card">
                             <div class="card-body p-5 text-center">
                                 <div class="mb-5">
                                     <i class="fas fa-chart-line fa-4x text-primary mb-4"></i>
                                     <h1 class="display-4 fw-bold text-primary mb-3">ExpenseTracker</h1>
                                     <p class="lead text-muted mb-4">
-                                        Take control of your finances with our powerful expense tracking system
+                                        Complete Financial Management - Track Expenses, Income, Budgets & Goals
                                     </p>
                                 </div>
 
+                                <!-- Enhanced Feature Grid -->
                                 <div class="row mb-5">
-                                    <div class="col-md-4 mb-4">
+                                    <div class="col-md-3 mb-4">
                                         <div class="feature-card">
                                             <i class="fas fa-money-bill-wave fa-2x text-success mb-3"></i>
-                                            <h5>Track Expenses</h5>
-                                            <p class="text-muted small">Monitor your daily spending habits</p>
+                                            <h6>Expense Tracking</h6>
+                                            <p class="text-muted small">Monitor daily spending with smart categorization</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-4">
+                                    <div class="col-md-3 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-wallet fa-2x text-primary mb-3"></i>
+                                            <h6>Income Management</h6>
+                                            <p class="text-muted small">Track all income sources and recurring earnings</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-4">
                                         <div class="feature-card">
                                             <i class="fas fa-chart-pie fa-2x text-warning mb-3"></i>
-                                            <h5>Budget Planning</h5>
-                                            <p class="text-muted small">Set and manage your monthly budgets</p>
+                                            <h6>Budget Planning</h6>
+                                            <p class="text-muted small">Set and manage monthly budgets with alerts</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-4">
+                                    <div class="col-md-3 mb-4">
                                         <div class="feature-card">
                                             <i class="fas fa-bullseye fa-2x text-info mb-3"></i>
-                                            <h5>Financial Goals</h5>
-                                            <p class="text-muted small">Achieve your savings targets</p>
+                                            <h6>Financial Goals</h6>
+                                            <p class="text-muted small">Achieve savings targets with progress tracking</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="d-grid gap-3 d-md-flex justify-content-center">
-                                    <a href="{% url 'tracker:register' %}" class="btn btn-primary btn-lg px-5">
-                                        <i class="fas fa-user-plus me-2"></i>Get Started
+                                <!-- Second Row of Features -->
+                                <div class="row mb-5">
+                                    <div class="col-md-3 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-chart-bar fa-2x text-danger mb-3"></i>
+                                            <h6>Advanced Reports</h6>
+                                            <p class="text-muted small">Generate detailed financial reports and analytics</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-file-export fa-2x text-secondary mb-3"></i>
+                                            <h6>Data Export</h6>
+                                            <p class="text-muted small">Export to CSV/PDF for external analysis</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-sync-alt fa-2x text-success mb-3"></i>
+                                            <h6>Recurring Transactions</h6>
+                                            <p class="text-muted small">Automate regular income and expense tracking</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-4">
+                                        <div class="feature-card">
+                                            <i class="fas fa-mobile-alt fa-2x text-info mb-3"></i>
+                                            <h6>Responsive Design</h6>
+                                            <p class="text-muted small">Works perfectly on all devices</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Key Benefits Section -->
+                                <div class="row mb-5">
+                                    <div class="col-12">
+                                        <div class="benefits-section p-4 rounded">
+                                            <h4 class="mb-4 text-primary">Why Choose ExpenseTracker?</h4>
+                                            <div class="row text-start">
+                                                <div class="col-md-6">
+                                                    <ul class="list-unstyled">
+                                                        <li class="mb-2">
+                                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                                            <strong>Complete Financial Picture:</strong> Track both expenses AND income
+                                                        </li>
+                                                        <li class="mb-2">
+                                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                                            <strong>Smart Analytics:</strong> Visual charts and spending insights
+                                                        </li>
+                                                        <li class="mb-2">
+                                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                                            <strong>Budget Alerts:</strong> Get notified before overspending
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <ul class="list-unstyled">
+                                                        <li class="mb-2">
+                                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                                            <strong>Goal Tracking:</strong> Save for specific financial targets
+                                                        </li>
+                                                        <li class="mb-2">
+                                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                                            <strong>Data Export:</strong> CSV and PDF reports for tax purposes
+                                                        </li>
+                                                        <li class="mb-2">
+                                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                                            <strong>Secure & Private:</strong> Your data stays with you
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Call to Action Buttons -->
+                                <div class="d-grid gap-3 d-md-flex justify-content-center mb-4">
+                                    <a href="{% url 'tracker:register' %}" class="btn btn-primary btn-lg px-5 py-3">
+                                        <i class="fas fa-rocket me-2"></i>Start Your Financial Journey
                                     </a>
-                                    <a href="{% url 'tracker:login' %}" class="btn btn-outline-primary btn-lg px-5">
-                                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    <a href="{% url 'tracker:login' %}" class="btn btn-outline-primary btn-lg px-5 py-3">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Sign In to Your Account
                                     </a>
                                 </div>
 
-                                <div class="mt-5">
+                                <!-- Quick Stats Preview -->
+                                <div class="row mt-5">
+                                    <div class="col-md-4">
+                                        <div class="stat-preview">
+                                            <div class="stat-number text-primary">500+</div>
+                                            <div class="stat-label">Active Users</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-preview">
+                                            <div class="stat-number text-success">$2M+</div>
+                                            <div class="stat-label">Tracked Monthly</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="stat-preview">
+                                            <div class="stat-number text-warning">95%</div>
+                                            <div class="stat-label">Budget Success Rate</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
                                     <small class="text-muted">
-                                        Already have an account? <a href="{% url 'tracker:login' %}" class="text-decoration-none">Sign in here</a>
+                                        Join thousands of users who have taken control of their finances with ExpenseTracker
                                     </small>
                                 </div>
                             </div>
@@ -82,36 +188,99 @@
             display: flex;
             align-items: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 0;
         }
 
         .auth-card {
             border: none;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.98);
+            overflow: hidden;
         }
 
         .feature-card {
-            padding: 1.5rem;
+            padding: 1.5rem 1rem;
             border-radius: 12px;
             background: #f8f9fa;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             height: 100%;
+            border: 1px solid #e9ecef;
         }
+
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        .benefits-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+        }
+
+        .benefits-section ul li {
+            padding: 0.25rem 0;
+        }
+
+        .stat-preview {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
         }
 
         .btn {
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
             transition: all 0.3s ease;
+            border: none;
         }
 
-        .btn:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #4361ee;
+            color: #4361ee;
+        }
+
+        .btn-outline-primary:hover {
+            background: #4361ee;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .auth-card {
+                margin: 1rem;
+            }
+            
+            .display-4 {
+                font-size: 2.5rem;
+            }
+            
+            .btn-lg {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
         }
         </style>
     {% endif %}

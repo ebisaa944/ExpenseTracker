@@ -42,6 +42,13 @@ urlpatterns = [
     path('expenses/<int:pk>/edit/', views.expense_edit, name='expense_edit'),
     path('expenses/<int:pk>/delete/', views.expense_delete, name='expense_delete'),
     
+    # Income - CORRECTED TO MATCH VIEWS
+    path('income/', views.income_list, name='income_list'),
+    path('income/new/', views.income_create, name='income_create'),
+    path('income/<int:pk>/edit/', views.income_edit, name='income_edit'),
+    path('income/<int:pk>/delete/', views.income_delete, name='income_delete'),
+    path('income/summary/', views.income_summary, name='income_summary'),
+    
     # Budgets
     path('budgets/', views.budget_list, name='budget_list'),
     path('budgets/new/', views.budget_create, name='budget_create'),
@@ -54,6 +61,12 @@ urlpatterns = [
     path('goals/<int:pk>/edit/', views.goal_edit, name='goal_edit'),
     path('goals/<int:pk>/delete/', views.goal_delete, name='goal_delete'),
     
+    # Reports & Export
+    path('reports/', views.financial_reports, name='financial_reports'),
+    path('reports/export/expenses/csv/', views.export_expenses_csv, name='export_expenses_csv'),
+    path('reports/export/income/csv/', views.export_income_csv, name='export_income_csv'),
+    path('reports/export/financial-report/pdf/', views.export_financial_report_pdf, name='export_financial_report_pdf'),
+    
     # API endpoints for charts (regular views)
     path('api/expense-chart-data/', views.expense_chart_data, name='expense_chart_data'),
     path('api/category-chart-data/', views.category_chart_data, name='category_chart_data'),
@@ -64,26 +77,32 @@ urlpatterns = [
     path('', include(router.urls)),
 ]
 
-# Optional: Add password reset URLs if needed
+# Password Reset URLs (Custom Views)
 urlpatterns += [
     path('password-reset/',
-         auth_views.PasswordResetView.as_view(
+         views.CustomPasswordResetView.as_view(
              template_name='tracker/password_reset.html'
          ),
          name='password_reset'),
     path('password-reset/done/',
-         auth_views.PasswordResetDoneView.as_view(
+         views.CustomPasswordResetDoneView.as_view(
              template_name='tracker/password_reset_done.html'
          ),
          name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(
+         views.CustomPasswordResetConfirmView.as_view(
              template_name='tracker/password_reset_confirm.html'
          ),
          name='password_reset_confirm'),
     path('password-reset-complete/',
-         auth_views.PasswordResetCompleteView.as_view(
+         views.CustomPasswordResetCompleteView.as_view(
              template_name='tracker/password_reset_complete.html'
          ),
          name='password_reset_complete'),
+]
+
+# Additional URLs for new features
+urlpatterns += [
+    # Recurring Transactions
+    path('recurring/process/', views.process_recurring_transactions, name='process_recurring_transactions'),
 ]

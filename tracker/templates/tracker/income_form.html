@@ -1,0 +1,157 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Income - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card dashboard-card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-{% if form.instance.pk %}edit{% else %}plus{% endif %} me-2"></i>
+                        {% if form.instance.pk %}Edit{% else %}Add New{% endif %} Income
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.amount.id_for_label }}" class="form-label">Amount *</label>
+                                    {{ form.amount }}
+                                    {% if form.amount.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.amount.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.source.id_for_label }}" class="form-label">Source *</label>
+                                    {{ form.source }}
+                                    {% if form.source.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.source.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">Description *</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.description.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.date.id_for_label }}" class="form-label">Date *</label>
+                                    {{ form.date }}
+                                    {% if form.date.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.date.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Recurring Income</label>
+                                    <div class="form-check form-switch">
+                                        {{ form.is_recurring }}
+                                        <label class="form-check-label" for="{{ form.is_recurring.id_for_label }}">
+                                            This is a recurring income
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 recurrence-field" id="recurrence-field" style="display: none;">
+                            <label for="{{ form.recurrence_pattern.id_for_label }}" class="form-label">Recurrence Pattern</label>
+                            {{ form.recurrence_pattern }}
+                            {% if form.recurrence_pattern.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.recurrence_pattern.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="form-text">Select how often this income repeats</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.notes.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'tracker:income_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                {% if form.instance.pk %}Update{% else %}Add{% endif %} Income
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isRecurringField = document.getElementById('{{ form.is_recurring.id_for_label }}');
+    const recurrenceField = document.getElementById('recurrence-field');
+    
+    function toggleRecurrenceField() {
+        if (isRecurringField.checked) {
+            recurrenceField.style.display = 'block';
+        } else {
+            recurrenceField.style.display = 'none';
+        }
+    }
+    
+    isRecurringField.addEventListener('change', toggleRecurrenceField);
+    toggleRecurrenceField(); // Initial state
+});
+</script>
+{% endblock %}

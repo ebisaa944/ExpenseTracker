@@ -1,0 +1,204 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Income Summary - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">Income Summary</h1>
+            <p class="text-muted">Analyze your income sources and trends</p>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group">
+                <a href="{% url 'tracker:income_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-list me-2"></i>View All Income
+                </a>
+                <a href="{% url 'tracker:export_income_csv' %}" class="btn btn-outline-success">
+                    <i class="fas fa-download me-2"></i>Export CSV
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Period Selector -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Time Period</h5>
+        </div>
+        <div class="card-body">
+            <div class="btn-group" role="group">
+                <a href="?period=week" class="btn btn-outline-primary {% if period == 'week' %}active{% endif %}">Week</a>
+                <a href="?period=month" class="btn btn-outline-primary {% if period == 'month' %}active{% endif %}">Month</a>
+                <a href="?period=year" class="btn btn-outline-primary {% if period == 'year' %}active{% endif %}">Year</a>
+            </div>
+            <p class="text-muted mt-2 mb-0">
+                Showing data from {{ start_date|date:"M d, Y" }} to {{ end_date|date:"M d, Y" }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Income Overview -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stats-card primary">
+                <i class="fas fa-money-bill-wave stats-icon"></i>
+                <div class="stats-number">${{ total_income|floatformat:2 }}</div>
+                <div class="stats-label">Total Income</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card success">
+                <i class="fas fa-sync-alt stats-icon"></i>
+                <div class="stats-number">${{ recurring_income|floatformat:2 }}</div>
+                <div class="stats-label">Recurring Income</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card info">
+                <i class="fas fa-chart-pie stats-icon"></i>
+                <div class="stats-number">{{ income_by_source|length }}</div>
+                <div class="stats-label">Income Sources</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Income by Source -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card dashboard-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Income by Source</h5>
+                </div>
+                <div class="card-body">
+                    {% if income_by_source %}
+                    <div class="chart-container">
+                        <canvas id="incomeSourceChart"></canvas>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-chart-pie fa-2x text-muted mb-3"></i>
+                        <p class="text-muted">No income data available for the selected period.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card dashboard-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-table me-2"></i>Income Breakdown</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if income_by_source %}
+                    <div class="table-responsive">
+                        <table class="table data-table">
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th>Amount</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in income_by_source %}
+                                <tr>
+                                    <td>
+                                        {% for source_key, source_display in income_sources %}
+                                            {% if source_key == item.source %}
+                                                {{ source_display }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="fw-bold text-success">${{ item.total|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: {{ item.total|divisibleby:total_income|default:0|floatformat:1 }}%">
+                                                </div>
+                                            </div>
+                                            <span class="text-muted small">
+                                                {{ item.total|divisibleby:total_income|default:0|floatformat:1 }}%
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-table fa-2x text-muted mb-3"></i>
+                        <p class="text-muted">No income data available for the selected period.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    {% if income_by_source %}
+    const ctx = document.getElementById('incomeSourceChart').getContext('2d');
+    const incomeData = {
+        labels: [
+            {% for item in income_by_source %}
+                {% for source_key, source_display in income_sources %}
+                    {% if source_key == item.source %}'{{ source_display }}'{% endif %}
+                {% endfor %}
+                {% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        datasets: [{
+            data: [
+                {% for item in income_by_source %}
+                    {{ item.total|floatformat:2 }}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            backgroundColor: [
+                '#4361ee', '#3a0ca3', '#7209b7', '#f72585', 
+                '#4cc9f0', '#4895ef', '#560bad'
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+        }]
+    };
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: incomeData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return `${context.label}: $${context.parsed.toFixed(2)} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+});
+</script>
+{% endblock %}
