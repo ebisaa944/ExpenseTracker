@@ -18,7 +18,7 @@
                 </a>
             </div>
 
-            <form method="post">
+            <form method="post" id="settingsForm">
                 {% csrf_token %}
                 
                 <!-- Currency Settings -->
@@ -31,13 +31,68 @@
                             <div class="col-md-8">
                                 <label for="currency" class="form-label">Default Currency</label>
                                 <select class="form-select" id="currency" name="currency">
-                                    {% for currency in currencies %}
-                                    <option value="{{ currency.code }}" {% if currency.code == 'USD' %}selected{% endif %}>
-                                        {{ currency.name }} ({{ currency.code }})
-                                    </option>
-                                    {% endfor %}
+                                    <option value="ETB" selected>Ethiopian Birr (ETB) - ብር</option>
+                                    <option value="USD">United States Dollar (USD) - $</option>
+                                    <option value="EUR">Euro (EUR) - €</option>
+                                    <option value="GBP">British Pound Sterling (GBP) - £</option>
+                                    <option value="JPY">Japanese Yen (JPY) - ¥</option>
+                                    <option value="CAD">Canadian Dollar (CAD) - C$</option>
+                                    <option value="AUD">Australian Dollar (AUD) - A$</option>
+                                    <option value="CHF">Swiss Franc (CHF) - CHF</option>
+                                    <option value="CNY">Chinese Yuan (CNY) - ¥</option>
+                                    <option value="INR">Indian Rupee (INR) - ₹</option>
+                                    <option value="AED">UAE Dirham (AED) - د.إ</option>
+                                    <option value="SAR">Saudi Riyal (SAR) - ﷼</option>
+                                    <option value="KES">Kenyan Shilling (KES) - KSh</option>
+                                    <option value="NGN">Nigerian Naira (NGN) - ₦</option>
+                                    <option value="GHS">Ghanaian Cedi (GHS) - ₵</option>
+                                    <option value="ZAR">South African Rand (ZAR) - R</option>
+                                    <option value="EGP">Egyptian Pound (EGP) - E£</option>
+                                    <option value="MAD">Moroccan Dirham (MAD) - د.م.</option>
+                                    <option value="TZS">Tanzanian Shilling (TZS) - TSh</option>
+                                    <option value="UGX">Ugandan Shilling (UGX) - USh</option>
+                                    <option value="RWF">Rwandan Franc (RWF) - FRw</option>
+                                    <option value="XOF">West African CFA Franc (XOF) - CFA</option>
+                                    <option value="XAF">Central African CFA Franc (XAF) - FCFA</option>
                                 </select>
                                 <div class="form-text">This will be used for all monetary values throughout the application.</div>
+                                
+                                <!-- Quick Currency Selection -->
+                                <div class="mt-3">
+                                    <label class="form-label mb-2">Quick Select Popular Currencies:</label>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm currency-quick-select" data-currency="ETB">
+                                            ETB (ብር)
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm currency-quick-select" data-currency="USD">
+                                            USD ($)
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm currency-quick-select" data-currency="EUR">
+                                            EUR (€)
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm currency-quick-select" data-currency="GBP">
+                                            GBP (£)
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm currency-quick-select" data-currency="KES">
+                                            KES (KSh)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Currency Information -->
+                            <div class="col-md-4">
+                                <div class="currency-info-card p-3 border rounded bg-light">
+                                    <h6 class="text-success mb-2">
+                                        <i class="fas fa-info-circle me-1"></i>Currency Info
+                                    </h6>
+                                    <div id="currency-details">
+                                        <p class="small mb-1"><strong>Ethiopian Birr (ETB)</strong></p>
+                                        <p class="small mb-1">Symbol: ብር</p>
+                                        <p class="small mb-1">Subunit: Santim</p>
+                                        <p class="small mb-0">Used in: Ethiopia</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,7 +136,61 @@
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <div class="form-text">Choose your preferred color theme for the application.</div>
+                                <div class="form-text">
+                                    <span id="theme-description">
+                                        {% for theme in themes %}
+                                            {% if theme.code == 'light' %}{{ theme.description }}{% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Theme Preview -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <label class="form-label">Theme Preview</label>
+                                <div class="theme-preview-container">
+                                    <div class="theme-option active" data-theme="light">
+                                        <div class="theme-preview light-theme">
+                                            <div class="preview-header bg-primary"></div>
+                                            <div class="preview-content bg-white">
+                                                <div class="preview-card">
+                                                    <div class="preview-text bg-light"></div>
+                                                    <div class="preview-text short"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="theme-label">Light</span>
+                                    </div>
+                                    <div class="theme-option" data-theme="dark">
+                                        <div class="theme-preview dark-theme">
+                                            <div class="preview-header bg-dark"></div>
+                                            <div class="preview-content bg-dark">
+                                                <div class="preview-card">
+                                                    <div class="preview-text bg-secondary"></div>
+                                                    <div class="preview-text short"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="theme-label">Dark</span>
+                                    </div>
+                                    <div class="theme-option" data-theme="auto">
+                                        <div class="theme-preview auto-theme">
+                                            <div class="preview-header bg-primary"></div>
+                                            <div class="preview-content bg-light">
+                                                <div class="preview-card">
+                                                    <div class="preview-text bg-white"></div>
+                                                    <div class="preview-text short"></div>
+                                                </div>
+                                            </div>
+                                            <div class="auto-indicator">
+                                                <i class="fas fa-desktop"></i>
+                                            </div>
+                                        </div>
+                                        <span class="theme-label">Auto</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -145,21 +254,21 @@
                             <div class="border rounded p-3 mb-3">
                                 <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
                                 <h6>Currency</h6>
-                                <p class="text-muted mb-0">USD ($)</p>
+                                <p class="text-muted mb-0" id="preview-currency">ETB (ብር)</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="border rounded p-3 mb-3">
                                 <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
                                 <h6>Date Format</h6>
-                                <p class="text-muted mb-0">{{ timezone.now|date:"Y-m-d" }}</p>
+                                <p class="text-muted mb-0" id="preview-date">{{ timezone.now|date:"Y-m-d" }}</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="border rounded p-3 mb-3">
                                 <i class="fas fa-palette fa-2x text-warning mb-2"></i>
                                 <h6>Theme</h6>
-                                <p class="text-muted mb-0">Light</p>
+                                <p class="text-muted mb-0" id="preview-theme">Light</p>
                             </div>
                         </div>
                     </div>
@@ -168,4 +277,351 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const themeSelect = document.getElementById('theme');
+    const themeOptions = document.querySelectorAll('.theme-option');
+    const themeDescription = document.getElementById('theme-description');
+    const previewTheme = document.getElementById('preview-theme');
+    
+    // Currency elements
+    const currencySelect = document.getElementById('currency');
+    const currencyQuickSelects = document.querySelectorAll('.currency-quick-select');
+    const currencyDetails = document.getElementById('currency-details');
+    const previewCurrency = document.getElementById('preview-currency');
+    
+    // Theme descriptions
+    const themeDescriptions = {
+        'light': 'Always use light theme regardless of system preferences',
+        'dark': 'Always use dark theme for better night viewing',
+        'auto': 'Automatically switch between light and dark based on your system preferences'
+    };
+    
+    // Theme preview labels
+    const themeLabels = {
+        'light': 'Light',
+        'dark': 'Dark', 
+        'auto': 'Auto (System)'
+    };
+    
+    // Currency information
+    const currencyInfo = {
+        'ETB': {
+            name: 'Ethiopian Birr',
+            symbol: 'ብር',
+            subunit: 'Santim',
+            region: 'Ethiopia',
+            description: 'Official currency of Ethiopia'
+        },
+        'USD': {
+            name: 'United States Dollar',
+            symbol: '$',
+            subunit: 'Cent',
+            region: 'United States',
+            description: 'World\'s primary reserve currency'
+        },
+        'EUR': {
+            name: 'Euro',
+            symbol: '€',
+            subunit: 'Cent',
+            region: 'European Union',
+            description: 'Official currency of the Eurozone'
+        },
+        'GBP': {
+            name: 'British Pound Sterling',
+            symbol: '£',
+            subunit: 'Penny',
+            region: 'United Kingdom',
+            description: 'Oldest currency still in use'
+        },
+        'JPY': {
+            name: 'Japanese Yen',
+            symbol: '¥',
+            subunit: 'Sen',
+            region: 'Japan',
+            description: 'Official currency of Japan'
+        },
+        'KES': {
+            name: 'Kenyan Shilling',
+            symbol: 'KSh',
+            subunit: 'Cent',
+            region: 'Kenya',
+            description: 'Official currency of Kenya'
+        }
+        // Add more currency info as needed
+    };
+
+    // Update currency details display
+    function updateCurrencyDetails(currencyCode) {
+        const info = currencyInfo[currencyCode] || currencyInfo['ETB'];
+        currencyDetails.innerHTML = `
+            <p class="small mb-1"><strong>${info.name} (${currencyCode})</strong></p>
+            <p class="small mb-1">Symbol: ${info.symbol}</p>
+            <p class="small mb-1">Subunit: ${info.subunit}</p>
+            <p class="small mb-0">Used in: ${info.region}</p>
+        `;
+        
+        // Update preview
+        const selectedOption = currencySelect.options[currencySelect.selectedIndex];
+        previewCurrency.textContent = selectedOption.text;
+        
+        // Update quick select buttons
+        currencyQuickSelects.forEach(btn => {
+            if (btn.dataset.currency === currencyCode) {
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-primary');
+            } else {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-secondary');
+            }
+        });
+    }
+    
+    // Update theme description and preview
+    function updateThemeDisplay(themeValue) {
+        themeDescription.textContent = themeDescriptions[themeValue] || '';
+        previewTheme.textContent = themeLabels[themeValue] || 'Light';
+        
+        // Update active state in theme preview
+        themeOptions.forEach(option => {
+            if (option.dataset.theme === themeValue) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+        
+        // Apply theme preview immediately
+        applyTheme(themeValue);
+    }
+    
+    // Apply theme to the page
+    function applyTheme(theme) {
+        const html = document.documentElement;
+        
+        // Remove existing theme classes
+        html.classList.remove('theme-light', 'theme-dark');
+        
+        if (theme === 'dark') {
+            html.classList.add('theme-dark');
+        } else if (theme === 'light') {
+            html.classList.add('theme-light');
+        } else if (theme === 'auto') {
+            // Auto theme - use system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                html.classList.add('theme-dark');
+            } else {
+                html.classList.add('theme-light');
+            }
+        }
+    }
+    
+    // Currency select change handler
+    currencySelect.addEventListener('change', function() {
+        updateCurrencyDetails(this.value);
+    });
+    
+    // Quick currency selection
+    currencyQuickSelects.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const currencyValue = this.dataset.currency;
+            currencySelect.value = currencyValue;
+            updateCurrencyDetails(currencyValue);
+        });
+    });
+    
+    // Theme select change handler
+    themeSelect.addEventListener('change', function() {
+        updateThemeDisplay(this.value);
+    });
+    
+    // Theme preview click handlers
+    themeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const themeValue = this.dataset.theme;
+            themeSelect.value = themeValue;
+            updateThemeDisplay(themeValue);
+        });
+    });
+    
+    // Date format preview updates
+    const dateFormatSelect = document.getElementById('date_format');
+    const previewDate = document.getElementById('preview-date');
+    
+    dateFormatSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        previewDate.textContent = selectedOption.text.split(' (')[1].replace(')', '');
+    });
+    
+    // Initialize displays
+    updateCurrencyDetails(currencySelect.value);
+    updateThemeDisplay(themeSelect.value);
+    
+    // Listen for system theme changes (for auto theme)
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (themeSelect.value === 'auto') {
+                applyTheme('auto');
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.theme-preview-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.theme-option {
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.theme-option.active {
+    border-color: #4361ee;
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+.theme-option:hover {
+    transform: translateY(-2px);
+}
+
+.theme-preview {
+    width: 120px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.preview-header {
+    height: 20px;
+    width: 100%;
+}
+
+.preview-content {
+    height: 60px;
+    padding: 8px;
+}
+
+.preview-card {
+    background: var(--preview-card-bg, #f8f9fa);
+    border-radius: 4px;
+    padding: 6px;
+    height: 100%;
+}
+
+.preview-text {
+    height: 6px;
+    background: var(--preview-text-bg, #e9ecef);
+    border-radius: 2px;
+    margin-bottom: 4px;
+}
+
+.preview-text.short {
+    width: 60%;
+}
+
+/* Light Theme Preview */
+.light-theme {
+    --preview-card-bg: #ffffff;
+    --preview-text-bg: #f8f9fa;
+}
+
+/* Dark Theme Preview */
+.dark-theme {
+    --preview-card-bg: #2d3748;
+    --preview-text-bg: #4a5568;
+}
+
+/* Auto Theme Preview */
+.auto-theme {
+    position: relative;
+    --preview-card-bg: #ffffff;
+    --preview-text-bg: #f8f9fa;
+}
+
+.auto-indicator {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+}
+
+.theme-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.currency-info-card {
+    background: linear-gradient(135deg, #f8f9ff, #ffffff) !important;
+    border: 1px solid #e9ecef;
+}
+
+.currency-quick-select {
+    transition: all 0.3s ease;
+}
+
+.currency-quick-select:hover {
+    transform: translateY(-1px);
+}
+
+/* Theme classes for actual application */
+.theme-dark {
+    /* Dark theme variables would go here */
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.theme-dark .dashboard-card {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+.theme-dark .card-header {
+    background-color: #333;
+    border-bottom-color: #404040;
+}
+
+.theme-light {
+    /* Light theme is default */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .theme-preview-container {
+        justify-content: center;
+    }
+    
+    .theme-preview {
+        width: 100px;
+        height: 70px;
+    }
+    
+    .currency-info-card {
+        margin-top: 1rem;
+    }
+}
+</style>
 {% endblock %}
