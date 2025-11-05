@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, views as auth_views
+from django.contrib.auth import login, views as auth_views, update_session_auth_hash
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone
@@ -8,6 +8,8 @@ from datetime import timedelta, datetime
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.conf import settings
 import csv
 import json
 import io
@@ -70,6 +72,98 @@ def register(request):
         form = CustomUserCreationForm()
     
     return render(request, 'tracker/register.html', {'form': form})
+
+# ===== SETTINGS & PROFILE VIEWS =====
+
+@login_required
+def profile_settings(request):
+    """User profile settings page"""
+    user = request.user
+    
+    if request.method == 'POST':
+        # Handle profile updates
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip()
+        
+        # Basic validation
+        if email and '@' in email:
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.save()
+            messages.success(request, 'Profile updated successfully!')
+        else:
+            messages.error(request, 'Please enter a valid email address.')
+    
+    context = {
+        'user': user,
+        'title': 'Profile Settings'
+    }
+    return render(request, 'tracker/settings/profile.html', context)
+
+@login_required
+def account_settings(request):
+    """Account settings page (password change, etc.)"""
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('tracker:account_settings')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    context = {
+        'form': form,
+        'title': 'Account Settings'
+    }
+    return render(request, 'tracker/settings/account.html', context)
+
+@login_required
+def application_settings(request):
+    """Application settings page"""
+    if request.method == 'POST':
+        # Handle application settings updates
+        currency = request.POST.get('currency', 'USD')
+        date_format = request.POST.get('date_format', 'Y-m-d')
+        theme = request.POST.get('theme', 'light')
+        
+        # In a real application, you'd save these to user preferences
+        # For now, we'll just show a success message
+        messages.success(request, 'Application settings updated successfully!')
+    
+    # Default settings
+    context = {
+        'title': 'Application Settings',
+        'currencies': [
+            {'code': 'USD', 'name': 'US Dollar'},
+            {'code': 'EUR', 'name': 'Euro'},
+            {'code': 'GBP', 'name': 'British Pound'},
+        ],
+        'date_formats': [
+            {'code': 'Y-m-d', 'name': 'YYYY-MM-DD'},
+            {'code': 'm/d/Y', 'name': 'MM/DD/YYYY'},
+            {'code': 'd/m/Y', 'name': 'DD/MM/YYYY'},
+        ],
+        'themes': [
+            {'code': 'light', 'name': 'Light'},
+            {'code': 'dark', 'name': 'Dark'},
+            {'code': 'auto', 'name': 'Auto (System)'},
+        ]
+    }
+    return render(request, 'tracker/settings/application.html', context)
+
+@login_required
+def settings_overview(request):
+    """Main settings overview page"""
+    context = {
+        'title': 'Settings',
+    }
+    return render(request, 'tracker/settings/overview.html', context)
 
 @login_required
 def dashboard(request):

@@ -36,6 +36,12 @@ urlpatterns = [
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
     
+    # Settings & Profile URLs - NEWLY ADDED
+    path('settings/', views.settings_overview, name='settings_overview'),
+    path('settings/profile/', views.profile_settings, name='profile_settings'),
+    path('settings/account/', views.account_settings, name='account_settings'),
+    path('settings/application/', views.application_settings, name='application_settings'),
+    
     # Expenses
     path('expenses/', views.expense_list, name='expense_list'),
     path('expenses/new/', views.expense_create, name='expense_create'),

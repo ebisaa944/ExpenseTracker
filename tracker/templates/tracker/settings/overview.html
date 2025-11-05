@@ -1,0 +1,120 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Settings - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1"><i class="fas fa-cog me-2 text-primary"></i>Settings</h1>
+                    <p class="text-muted mb-0">Manage your account and application preferences</p>
+                </div>
+            </div>
+
+            <!-- Settings Cards -->
+            <div class="row g-4">
+                <!-- Profile Settings Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Profile Settings</h5>
+                            <p class="card-text text-muted small">
+                                Update your personal information, name, and email address
+                            </p>
+                            <a href="{% url 'tracker:profile_settings' %}" class="btn btn-primary mt-2">
+                                <i class="fas fa-edit me-1"></i>Manage Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Settings Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-shield-alt fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title">Account Security</h5>
+                            <p class="card-text text-muted small">
+                                Change your password and manage account security settings
+                            </p>
+                            <a href="{% url 'tracker:account_settings' %}" class="btn btn-success mt-2">
+                                <i class="fas fa-key me-1"></i>Security Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Settings Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-palette fa-3x text-info"></i>
+                            </div>
+                            <h5 class="card-title">App Preferences</h5>
+                            <p class="card-text text-muted small">
+                                Customize currency, date format, and application appearance
+                            </p>
+                            <a href="{% url 'tracker:application_settings' %}" class="btn btn-info mt-2">
+                                <i class="fas fa-sliders-h me-1"></i>Preferences
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card dashboard-card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-chart-bar me-2 text-warning"></i>Account Overview</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-user fa-2x text-primary mb-2"></i>
+                                        <h6 class="mb-1">Username</h6>
+                                        <p class="text-muted mb-0">{{ user.username }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-envelope fa-2x text-success mb-2"></i>
+                                        <h6 class="mb-1">Email</h6>
+                                        <p class="text-muted mb-0">{{ user.email|default:"Not set" }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-calendar-alt fa-2x text-info mb-2"></i>
+                                        <h6 class="mb-1">Member Since</h6>
+                                        <p class="text-muted mb-0">{{ user.date_joined|date:"M d, Y" }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-2">
+                                        <i class="fas fa-sign-in-alt fa-2x text-warning mb-2"></i>
+                                        <h6 class="mb-1">Last Login</h6>
+                                        <p class="text-muted mb-0">{{ user.last_login|date:"M d, Y"|default:"Never" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

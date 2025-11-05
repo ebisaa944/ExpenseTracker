@@ -1,0 +1,171 @@
+{% extends "tracker/base.html" %}
+{% load static %}
+
+{% block title %}Application Settings - ExpenseTracker{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1"><i class="fas fa-palette me-2 text-info"></i>Application Preferences</h1>
+                    <p class="text-muted mb-0">Customize your ExpenseTracker experience</p>
+                </div>
+                <a href="{% url 'tracker:settings_overview' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Settings
+                </a>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Currency Settings -->
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-money-bill-wave me-2 text-success"></i>Currency Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label for="currency" class="form-label">Default Currency</label>
+                                <select class="form-select" id="currency" name="currency">
+                                    {% for currency in currencies %}
+                                    <option value="{{ currency.code }}" {% if currency.code == 'USD' %}selected{% endif %}>
+                                        {{ currency.name }} ({{ currency.code }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">This will be used for all monetary values throughout the application.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date & Time Settings -->
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-calendar-alt me-2 text-primary"></i>Date & Time Format</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label for="date_format" class="form-label">Date Format</label>
+                                <select class="form-select" id="date_format" name="date_format">
+                                    {% for format in date_formats %}
+                                    <option value="{{ format.code }}" {% if format.code == 'Y-m-d' %}selected{% endif %}>
+                                        {{ format.name }} ({{ timezone.now|date:format.code }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Choose how dates are displayed throughout the application.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-paint-brush me-2 text-warning"></i>Appearance</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label for="theme" class="form-label">Theme</label>
+                                <select class="form-select" id="theme" name="theme">
+                                    {% for theme in themes %}
+                                    <option value="{{ theme.code }}" {% if theme.code == 'light' %}selected{% endif %}>
+                                        {{ theme.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Choose your preferred color theme for the application.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-bell me-2 text-danger"></i>Notifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="budget_alerts" name="budget_alerts" checked>
+                                    <label class="form-check-label" for="budget_alerts">
+                                        Budget Alerts
+                                    </label>
+                                    <div class="form-text">Receive notifications when you're approaching your budget limits</div>
+                                </div>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="goal_updates" name="goal_updates" checked>
+                                    <label class="form-check-label" for="goal_updates">
+                                        Goal Progress Updates
+                                    </label>
+                                    <div class="form-text">Get updates on your financial goals progress</div>
+                                </div>
+                                
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="weekly_reports" name="weekly_reports">
+                                    <label class="form-check-label" for="weekly_reports">
+                                        Weekly Summary Reports
+                                    </label>
+                                    <div class="form-text">Receive weekly email summaries of your financial activity</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>Save Preferences
+                    </button>
+                    <a href="{% url 'tracker:settings_overview' %}" class="btn btn-outline-secondary btn-lg">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+            <!-- Current Settings Preview -->
+            <div class="card dashboard-card mt-5">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-eye me-2 text-info"></i>Current Settings Preview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 mb-3">
+                                <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
+                                <h6>Currency</h6>
+                                <p class="text-muted mb-0">USD ($)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 mb-3">
+                                <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
+                                <h6>Date Format</h6>
+                                <p class="text-muted mb-0">{{ timezone.now|date:"Y-m-d" }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 mb-3">
+                                <i class="fas fa-palette fa-2x text-warning mb-2"></i>
+                                <h6>Theme</h6>
+                                <p class="text-muted mb-0">Light</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
