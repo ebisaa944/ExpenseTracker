@@ -105,5 +105,3 @@ This project is licensed under the MIT License – see the LICENSE
 2. Create or open `README.md` inside your ExpenseTracker folder.  
 3. **Paste** all of the above.  
 4. **Save → Commit → Push** to your GitHub repository.  
-
-When you view your repo on GitHub, this will display **exactly** like your Capstone Project (with badges, sections, icons, and clean formatting).
