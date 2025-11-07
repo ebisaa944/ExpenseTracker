@@ -92,7 +92,7 @@ Module	Description
 👨‍💻 Author
 
 Ebisa Achame Mihirate
-🔗 GitHub Profile
+🔗 [GitHub Profile](https://github.com/ebisaa944)
 
 📄 License
 
