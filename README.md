@@ -87,8 +87,9 @@ Module	Description
 /budgets/	Create and monitor spending budgets
 /goals/	Define and track financial goals
 /profile/	Manage user settings and preferences
-👨‍💻 Author
 
+
+👨‍💻 Author
 Ebisa Achame Mihirate
 🔗 GitHub Profile
 

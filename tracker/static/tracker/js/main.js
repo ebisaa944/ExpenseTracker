@@ -347,7 +347,7 @@ class ExpenseTracker {
                 window.requestAnimationFrame(step);
             }
         };
-        window.requestAnimationFrame(step);
+        globalThis.requestAnimationFrame(step);
     }
 
     // Show enhanced loading state
